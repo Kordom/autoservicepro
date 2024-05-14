@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from .models import *
 
@@ -17,3 +17,13 @@ def index(request):
     }
 
     return render(request, 'index.html', context=context)
+
+
+def show_all_cars(request):
+    cars_all = AutomobilioModelis.objects.all().order_by('marke')
+    return render(request, 'cars.html', {'cars_all': cars_all})
+
+
+def get_one_car(request, car_id):
+    car = get_object_or_404(Automobilis, pk=car_id)
+    return render(request, 'car.html', {'car_obj': car})

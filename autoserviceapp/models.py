@@ -22,6 +22,7 @@ class AutomobilioModelis(models.Model):
     class Meta:
         verbose_name = 'Automobilio modelis'
         verbose_name_plural = 'Automobilio modeliai'
+        ordering = ['marke']
 
 
 class Automobilis(models.Model):

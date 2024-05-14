@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Autoservisas</h1>
+<p>Siuo metu uregistruoti automobiliai</p>
+<hr/>
+<ul>
+    {% for car_obj in cars_all%}
+    <li><a href="{% url 'car' car_obj.id %}" class="text-nowrap">
+        {{ car_obj.marke }} {{ car_obj.modelis }}</a></li>
+    {% endfor %}
+</ul>
+
+
+
+{% endblock %}

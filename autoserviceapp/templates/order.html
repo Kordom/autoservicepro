@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Pasirinktas uzsakymas: {{ uzsakymas.data }}
+                            {{ uzsakymas.automobilis.marke }}
+                            {{ uzsakymas.automobilis.modelis }}</h1>
+<hr/>
+<p>Detalesne informacija apie uzsakyma:</p>
+<ul>
+    <li><strong>Kliento Vardas Pavarde:</strong> {{ uzsakymas.automobilis.klientas}}</li>
+    {% for uzsakymas_obj in uzsakymas.uzsakymoeilutes_set.all %}
+    <li>Paslaugu kiekis({{ uzsakymas_obj.kiekis}}) {{ uzsakymas_obj.paslauga }}</li>
+    {% endfor %}
+    <li><strong>Suma apmokejimu:</strong> {{ uzsakymas.suma}}€</li>
+
+</ul>
+{% endblock %}

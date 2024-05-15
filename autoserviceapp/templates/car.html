@@ -8,10 +8,16 @@
     <li><strong>Automobilio modelis:</strong> {{ car_obj.modelis }}</li>
     <li><strong>Valstybiniai numeriai:</strong> {{ car_obj.valstybinis_nr }}</li>
     <li><strong>VIN code:</strong> {{ car_obj.vin }}</li>
-
-
 </ul>
+<hr/>
+<h3>Priskirti darbai sitam automobiliui:</h3>
 
+<ul>
+    <li>Suma apmokejimui: {{ jobs_obj.suma }}€</li>
+    {% for jobs in jobs_obj.uzsakymoeilutes_set.all%}
+    <li>{{ jobs.uzsakymas.data }}, {{ jobs.paslauga }}, Atliktu darbu kiekis: {{ jobs.kiekis }}</li>
+    {% endfor %}
+</ul>
 
 
 

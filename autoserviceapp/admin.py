@@ -15,7 +15,8 @@ class AutomobilioModelisAdmin(admin.ModelAdmin):
 
 @admin.register(Automobilis)
 class AutomobilisAdmin(admin.ModelAdmin):
-    list_display = ('klientas',
+    list_display = (
+                    'klientas',
                     'marke',
                     'modelis',
                     'valstybinis_nr',
@@ -33,7 +34,7 @@ class UzsakymasAdmin(admin.ModelAdmin):
                     'klientas',
                     'status')
     inlines = (UzsakymasEilutesInline,)
-    list_filter = ('data','status')
+    list_filter = ('data', 'status')
     list_editable = ('status',)
 
 

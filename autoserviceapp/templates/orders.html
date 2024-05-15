@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Visi uzsakymai</h1>
+<hr/>
+<p>Siuo metu turimi uzsakymai</p>
+<ul>
+    {% for uzsakymas_obj in uzsakymas_list %}
+    <li><a href="{% url 'order' uzsakymas_obj.id %} ">
+        {{ uzsakymas_obj.data }},
+        {{ uzsakymas_obj.automobilis.marke }}
+        {{ uzsakymas_obj.automobilis.modelis }}</a></li>
+    {% endfor %}
+</ul>
+{% endblock %}

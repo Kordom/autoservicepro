@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Paieškos rezultatai pagal "{{ query_text }}"</h1>
+<hr/>
+
+<ul>
+    {% for car_obj in results%}
+    <li><a href="{% url 'car' car_obj.id %}" class="text-nowrap">
+        {{ car_obj.marke }} {{ car_obj.modelis }}</a></li>
+    {% endfor %}
+</ul>
+
+
+
+{% endblock %}

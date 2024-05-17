@@ -4,6 +4,21 @@
 <h1>Visi uzsakymai</h1>
 <hr/>
 <p>Siuo metu turimi uzsakymai</p>
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}  {# page_obj sukuriamas automatiskai #}
+            <a href="?page=1">&laquo; pirmas</a>
+            <a href="?page={{ page_obj.previous_page_number }}">atgal</a>
+        {% endif %}
+        <span class="current">
+            {{ page_obj.number }} iš {{ page_obj.paginator.num_pages }}
+        </span>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">pirmyn</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">paskutinis &raquo;</a>
+        {% endif %}
+    </span>
+</div>
 <ul>
     {% for uzsakymas_obj in uzsakymas_list %}
     <li><a href="{% url 'order' uzsakymas_obj.id %} ">

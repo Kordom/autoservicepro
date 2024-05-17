@@ -2,7 +2,7 @@ import uuid
 
 from django.db import models
 from random import randint
-
+import PIL
 
 def make_random_vin():
     return randint(100000000, 999999999)
@@ -29,7 +29,9 @@ class Automobilis(models.Model):
     valstybinis_nr = models.CharField('Valstybinis Nr.', max_length=6)
     vin = models.IntegerField('VIN code', default=make_random_vin)
     klientas = models.CharField('Klientas', max_length=20)
-    automobilio_modelis = models.ForeignKey(AutomobilioModelis, on_delete=models.CASCADE)  # check how works
+    automobilio_modelis = models.ForeignKey(AutomobilioModelis, on_delete=models.CASCADE)
+
+    cover = models.ImageField('Virselis', upload_to='covers', null=True, blank=True)
 
     def __str__(self):
         return f'{self.valstybinis_nr} {self.vin} {self.klientas} {self.automobilio_modelis}'

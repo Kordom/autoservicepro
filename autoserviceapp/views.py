@@ -1,5 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
+from django.db.models import Q
+from django.core.paginator import Paginator
 from django.http import HttpResponse
 from .models import *
 
@@ -22,7 +24,12 @@ def index(request):
 
 def show_all_cars(request):
     cars_all = Automobilis.objects.all()
-    return render(request, 'cars.html', {'cars_all': cars_all})
+    paginator = Paginator(cars_all, 5)
+    page_number = request.GET.get('page')
+
+    paged_cars = paginator.get_page(page_number)
+
+    return render(request, 'cars.html', {'cars_all': paged_cars})
 
 
 def get_one_car(request, car_id):
@@ -39,6 +46,7 @@ class UzsakymasListView(generic.ListView):
     model = Uzsakymas
     context_object_name = 'uzsakymas_list'
     template_name = 'orders.html'
+    paginate_by = 5
 
 
 class UzsakymasDetailedView(generic.DetailView):
@@ -65,3 +73,16 @@ def get_all_current_orders_count(request):
     return render(request, 'curorders.html', context=context)
 
 
+def search(request):
+    query_text = request.GET['search_text']
+    search_results = Automobilis.objects.filter(Q(valstybinis_nr__icontains=query_text) |
+                                                Q(vin__icontains=query_text) |
+                                                Q(klientas__icontains=query_text) |
+                                                Q(automobilio_modelis__modelis__icontains=query_text) |
+                                                Q(automobilio_modelis__marke__icontains=query_text)
+                                                )
+    context = {
+        'query_text': query_text,
+        'results': search_results,
+    }
+    return render(request, 'search.html', context=context)

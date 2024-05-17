@@ -1,16 +1,44 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
 <h1>Autoservisas</h1>
 <hr/>
 <p>Siuo metu uregistruoti automobiliai</p>
-<ul>
-    {% for car_obj in cars_all%}
-    <li><a href="{% url 'car' car_obj.id %}" class="text-nowrap">
-        {{ car_obj.marke }} {{ car_obj.modelis }}</a></li>
-    {% endfor %}
+
+{% if cars_all.has_other_pages %}
+<ul class="pagination pagination-sm">
+{% for nr in cars_all.paginator.page_range %}
+    {% if cars_all.number == nr %}
+        <li class="page-item active">
+            <a class="page-link">{{ nr }}</a>
+        </li>
+    {% else %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ nr }}">{{ nr }}</a>
+        </li>
+    {% endif %}
+{% endfor %}
 </ul>
+{% endif %}
 
-
+<div class="row">
+{% for car_obj in cars_all %}
+    <div class="col-sm-6 col-md-3 d-flex flex-nowrap align-items-start">
+        <div class="card mb-4 shadow">
+            {% if car_obj.cover %}
+                <img class="card-img-top" src="{{ car_obj.cover.url }}"/>
+            {% else %}
+                <img class="card-img-top" src="{% static 'img/no-image.png' %}"/>
+            {% endif %}
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">{{ car_obj.marke }} {{ car_obj.modelis }}</h6>
+                <p class="card-text"><a href="{% url 'car' car_obj.id %}">{{ car_obj.valstybinis_nr }},
+                    Vin:{{ car_obj.vin }}, Klientas: {{ car_obj.klientas }}
+                </a></p>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+</div>
 
 {% endblock %}

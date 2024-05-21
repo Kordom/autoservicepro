@@ -2,6 +2,8 @@ from django.contrib import admin
 from .models import *
 
 
+# username:admin password:admin123456789
+
 class UzsakymasEilutesInline(admin.TabularInline):
     model = UzsakymoEilutes
     extra = 2
@@ -16,11 +18,11 @@ class AutomobilioModelisAdmin(admin.ModelAdmin):
 @admin.register(Automobilis)
 class AutomobilisAdmin(admin.ModelAdmin):
     list_display = (
-                    'klientas',
-                    'marke',
-                    'modelis',
-                    'valstybinis_nr',
-                    'vin')
+        'klientas',
+        'marke',
+        'modelis',
+        'valstybinis_nr',
+        'vin')
 
     list_filter = ('klientas', 'automobilio_modelis__marke')
     search_fields = ('vin', 'valstybinis_nr')
@@ -32,10 +34,13 @@ class UzsakymasAdmin(admin.ModelAdmin):
                     'marke',
                     'modelis',
                     'klientas',
-                    'status')
+                    'status',
+                    'uzsakovas',
+                    'grazinimo_terminas')
     inlines = (UzsakymasEilutesInline,)
     list_filter = ('data', 'status')
-    list_editable = ('status',)
+    list_editable = ('status', 'uzsakovas',
+                     'grazinimo_terminas')
 
 
 @admin.register(UzsakymoEilutes)

@@ -2,7 +2,10 @@ import uuid
 
 from django.db import models
 from random import randint
+from django.contrib.auth.models import User
+from datetime import date
 import PIL
+
 
 def make_random_vin():
     return randint(100000000, 999999999)
@@ -51,7 +54,8 @@ class Uzsakymas(models.Model):
     data = models.DateField('Data', blank=True, null=True)
     suma = models.FloatField('Suma')
     automobilis = models.ForeignKey(Automobilis, on_delete=models.CASCADE)
-
+    uzsakovas = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    grazinimo_terminas = models.DateField('Grazinimo data', blank=True, null=True)
     CAR_STATUS = (
         ('p', 'Priimtas'),
         ('e', 'Eigoje'),
@@ -73,9 +77,6 @@ class Uzsakymas(models.Model):
     class Meta:
         verbose_name = 'Uzsakymas'
         verbose_name_plural = 'Uzsakymai'
-
-
-
 
     def modelis(self):
         return self.automobilis.automobilio_modelis.modelis

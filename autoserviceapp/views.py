@@ -12,11 +12,15 @@ def index(request):
     atliktu_uzsakymu_kiekis = Uzsakymas.objects.filter(status__exact='i').count()
     automobiliu_kiekis = Automobilis.objects.count()
 
+    num_visits = request.session.get('num_visits', 1)
+    request.session['num_visits'] = num_visits + 1
+
     context = {
         'paslaugu_kiekis': paslaugu_kiekis,
         'uzsakymu_kiekis': uzsakymu_kiekis,
         'atliktu_uzsakymu_kiekis': atliktu_uzsakymu_kiekis,
-        'automobiliu_kiekis': automobiliu_kiekis
+        'automobiliu_kiekis': automobiliu_kiekis,
+        'num_visits': num_visits
     }
 
     return render(request, 'index.html', context=context)
@@ -86,3 +90,5 @@ def search(request):
         'results': search_results,
     }
     return render(request, 'search.html', context=context)
+
+

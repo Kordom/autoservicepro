@@ -1,8 +1,12 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views import generic
 from django.db.models import Q
-from django.core.paginator import Paginator
 from django.http import HttpResponse
+from django.core.paginator import Paginator
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
+from django.contrib.auth.models import User
+from django.views.decorators.csrf import csrf_protect
 from .models import *
 
 
@@ -92,3 +96,43 @@ def search(request):
     return render(request, 'search.html', context=context)
 
 
+class OrdersByUserListView(LoginRequiredMixin, generic.ListView):
+    model = Uzsakymas
+    template_name = 'user_orders.html'
+    context_object_name = 'uzsakymas_list'
+
+    def get_queryset(self):
+        return Uzsakymas.objects.filter(uzsakovas=self.request.user).order_by('grazinimo_terminas')
+
+
+@csrf_protect
+def register_user(request):
+    if request.method == 'GET':
+        return render(request, 'registration/registration.html')
+    elif request.method == 'POST':
+        # paimame duomenys is formos
+        username = request.POST['username']
+        email = request.POST['email']
+        password = request.POST['password']
+        password2 = request.POST['password2']
+
+        if password != password2:
+            messages.warning(request, "Slaptazodziai nesutampa!!")
+
+        if User.objects.filter(username=username).exists():
+            messages.warning(request, f"Profilis {username} jau uzimtas")
+
+        if not email:
+            messages.warning(request, "Email ne ivestas")
+
+        if User.objects.filter(email=email).exists():
+            messages.warning(request, f"Pastas {email} jau uzimtas. Gal pamirsote slaptazodi?")
+
+        # jeigu yra nor viena zinute messages(reiskia turime klada ir neimanoma iregisstruoti vartotoja)
+        if messages.get_messages(request):
+            return redirect('register-url')
+
+        # jeigu nebuvo kurimo metu jokiu klaidu mes galime registruoti nauja useri
+        User.objects.create_user(username=username, email=email, password=password)
+        messages.info(request, f'Jusu profilis: {username}, {email}, sekmingai uregistruotas')
+        return redirect('login')

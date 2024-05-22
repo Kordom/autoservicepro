@@ -9,5 +9,7 @@ urlpatterns = [
     path('orders/<int:pk>', views.UzsakymasDetailedView.as_view(), name='order'),
     path('curorders/', views.get_all_current_orders_count, name='curorders'),
     path('search/', views.search, name='search'),
+    path('myorders/', views.OrdersByUserListView.as_view(), name='myorders'),
+    path('register/', views.register_user, name='register-url'),
 
 ]

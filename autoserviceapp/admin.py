@@ -22,7 +22,8 @@ class AutomobilisAdmin(admin.ModelAdmin):
         'marke',
         'modelis',
         'valstybinis_nr',
-        'vin')
+        'vin',
+        'aprasymas')
 
     list_filter = ('klientas', 'automobilio_modelis__marke')
     search_fields = ('vin', 'valstybinis_nr')
@@ -36,7 +37,8 @@ class UzsakymasAdmin(admin.ModelAdmin):
                     'klientas',
                     'status',
                     'uzsakovas',
-                    'grazinimo_terminas')
+                    'grazinimo_terminas',
+                    'suma')
     inlines = (UzsakymasEilutesInline,)
     list_filter = ('data', 'status')
     list_editable = ('status', 'uzsakovas',
@@ -46,7 +48,7 @@ class UzsakymasAdmin(admin.ModelAdmin):
 @admin.register(UzsakymoEilutes)
 class UzsakymoEilutesAdmin(admin.ModelAdmin):
     list_display = ('kiekis', 'kaina')
-    list_filter = ('kiekis', 'kaina')
+    list_filter = ('kiekis', )
 
 
 @admin.register(Paslauga)

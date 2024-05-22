@@ -1,17 +1,17 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1>Pasirinktas uzsakymas: {{ uzsakymas.data }}
+<h1>Pasirinktas užsakymas: {{ uzsakymas.data }}
                             {{ uzsakymas.automobilis.marke }}
                             {{ uzsakymas.automobilis.modelis }}</h1>
 <hr/>
-<p>Detalesne informacija apie uzsakyma:</p>
+<p>Detalesne informacija apie užsakymą:</p>
 <ul>
-    <li><strong>Kliento Vardas Pavarde:</strong> {{ uzsakymas.automobilis.klientas}}</li>
+    <li><strong>Kliento Vardas Pavardė:</strong> {{ uzsakymas.automobilis.klientas}}</li>
     {% for uzsakymas_obj in uzsakymas.uzsakymoeilutes_set.all %}
-    <li>Paslaugu kiekis({{ uzsakymas_obj.kiekis}}) {{ uzsakymas_obj.paslauga }}</li>
+    <li>Paslaugų kiekis({{ uzsakymas_obj.kiekis}}) {{ uzsakymas_obj.paslauga }}</li>
     {% endfor %}
-    <li><strong>Suma apmokejimu:</strong> {{ uzsakymas.suma}}€</li>
+    <li><strong>Suma apmokejimui:</strong> {{ uzsakymas.suma}}€</li>
 
 </ul>
 {% endblock %}

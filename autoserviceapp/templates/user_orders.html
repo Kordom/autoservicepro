@@ -1,6 +1,36 @@
 {% extends 'base.html' %}
 {% block content %}
 
+<h1>Mano paskirti užsakymai</h1>
+{% if uzsakymas_list %}
+<ul>
+{% for uzsakymas_obj in uzsakymas_list %}
 
+   <li class="{% if uzsakymas_obj.is_overdue %} text-danger
+                {% else %} text-dark
+                {% endif %}">
+       {% if uzsakymas_obj.is_overdue  %}
+       Veluojama!!!
+       Priemimo data: {{ uzsakymas_obj.data }}
+       Atidavimo data: {{ uzsakymas_obj.grazinimo_terminas }}>>>
+       <a href="{% url 'order' uzsakymas_obj.automobilis.id %}">
+        {{ uzsakymas_obj.automobilis.valstybinis_nr }}
+        {{ uzsakymas_obj.automobilis.automobilio_modelis }}
+       </a>
+       {% else %}
+       Priemimo data: {{ uzsakymas_obj.data }}
+       Atidavimo data: {{ uzsakymas_obj.grazinimo_terminas }}>>>
+       <a href="{% url 'order' uzsakymas_obj.automobilis.id %}">
+        {{ uzsakymas_obj.automobilis.valstybinis_nr }}
+        {{ uzsakymas_obj.automobilis.automobilio_modelis }}
+       </a>
+       {% endif %}
+   </li>
 
+    {% endfor %}
+</ul>
+{% else %}
+<p>Šiuo metu jūs neturit paėmęs užsakymų</p>
+
+{% endif %}
 {% endblock %}

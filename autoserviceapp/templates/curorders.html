@@ -1,23 +1,23 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1>Vykdomi uzsakymai</h1>
+<h1>Vykdomi užsakymai</h1>
 <hr/>
-<p>Siuo metu turime {{ kiekis }} vykdomu/us uzsakymu/us</p>
-<p>Uzsakymai su statusu Eigoje:</p>
+<p>Šiuo metu turime {{ kiekis }} vykdomu/us užsakymu/us</p>
+<p>Užsakymai su statusu Eigoje:</p>
 <ul>
     {% for uzsakymas_obj in uzsakymai1 %}
     <li>
         {{ uzsakymas_obj.data }},
         Klientas: {{ uzsakymas_obj.automobilis.klientas }},
         {{ uzsakymas_obj.automobilis.automobilio_modelis }},
-        <a href="{% url 'order' uzsakymas_obj.id %}">Perziureti placiau</a>
+        <a href="{% url 'order' uzsakymas_obj.id %}">Peržiureti plačiau</a>
     </li>
 
     {% endfor %}
 
 </ul>
-<p>Uzsakymai su statusu Atliktu darbu tikrinimas:</p>
+<p>Užsakymai su statusu Atliktų darbų tikrinimas:</p>
 <ul>
     {% for uzsakymas_obj in uzsakymai2 %}
     <li>

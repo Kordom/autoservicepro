@@ -80,7 +80,6 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
-
               {% if user.is_authenticated %}
                   <li class="nav-item">
                   <a class="nav-link" >
@@ -98,13 +97,19 @@
                       {{ user }}
                   </a>
                   </li>
-                  <li class="nav-item">
+              <li class="nav-item">
                   <a class="nav-link" href="{% url 'logout' %}">Atsijungti</a>
-                  </li>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="{% url 'myorders' %}">Mano užsakymai</a>
+              </li>
               {% else %}
-                  <li class="nav-item">
+              <li class="nav-item">
+                  <a class="nav-link" href="{% url 'register-url' %}">Registruotis</a>
+              </li>
+              <li class="nav-item">
                   <a class="nav-link" href="{% url 'login' %}?next={{ request.path }}">Prisijungti</a>
-                  </li>
+              </li>
               {% endif %}
 
 
@@ -141,8 +146,16 @@
         </div>
       </div>
     </nav>
-    <div class="container">{% block content %}{% endblock %}</div>
 
+    {% for message in messages %}
+    <div class="alert {% if message.tags == 'info' %}
+                alert-success
+                {% elif message.tags == 'warning' %}
+                alert-danger
+                {% endif %}" role="alert">{{ message }}</div>
+    {% endfor %}
+
+    <div class="container">{% block content %}{% endblock %}</div>
     <script
       src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
       integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"

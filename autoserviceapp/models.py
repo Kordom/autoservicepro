@@ -1,5 +1,5 @@
 import uuid
-
+from tinymce.models import HTMLField
 from django.db import models
 from random import randint
 from django.contrib.auth.models import User
@@ -33,8 +33,9 @@ class Automobilis(models.Model):
     vin = models.IntegerField('VIN code', default=make_random_vin)
     klientas = models.CharField('Klientas', max_length=20)
     automobilio_modelis = models.ForeignKey(AutomobilioModelis, on_delete=models.CASCADE)
+    aprasymas = HTMLField(null=True, blank=True)
 
-    cover = models.ImageField('Virselis', upload_to='covers', null=True, blank=True)
+    cover = models.ImageField('Viršelis', upload_to='covers', null=True, blank=True)
 
     def __str__(self):
         return f'{self.valstybinis_nr} {self.vin} {self.klientas} {self.automobilio_modelis}'
@@ -52,15 +53,15 @@ class Automobilis(models.Model):
 
 class Uzsakymas(models.Model):
     data = models.DateField('Data', blank=True, null=True)
-    suma = models.FloatField('Suma')
+    # suma = models.FloatField('Suma')
     automobilis = models.ForeignKey(Automobilis, on_delete=models.CASCADE)
     uzsakovas = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
-    grazinimo_terminas = models.DateField('Grazinimo data', blank=True, null=True)
+    grazinimo_terminas = models.DateField('Gražinimo data', blank=True, null=True)
     CAR_STATUS = (
         ('p', 'Priimtas'),
         ('e', 'Eigoje'),
-        ('ap', 'Atliktu darbu patikrinimas'),
-        ('i', 'Ivykdytas')
+        ('ap', 'Atliktų darbų patikrinimas'),
+        ('i', 'Įvykdytas')
     )
 
     status = models.CharField(
@@ -75,8 +76,8 @@ class Uzsakymas(models.Model):
         return f'{self.data} {self.suma} {self.automobilis}'
 
     class Meta:
-        verbose_name = 'Uzsakymas'
-        verbose_name_plural = 'Uzsakymai'
+        verbose_name = 'Užsakymas'
+        verbose_name_plural = 'Užsakymai'
 
     def modelis(self):
         return self.automobilis.automobilio_modelis.modelis
@@ -87,10 +88,23 @@ class Uzsakymas(models.Model):
     def klientas(self):
         return self.automobilis.klientas
 
+    @property
+    def is_overdue(self):
+        if self.grazinimo_terminas and date.today() > self.grazinimo_terminas:
+            return True
+        else:
+            return False
+
+    @property
+    def suma(self):
+        uzsakymo_eilutes = self.uzsakymoeilutes_set.all()
+        suma = sum(uzsakymas.kaina for uzsakymas in uzsakymo_eilutes)
+        return suma
+
 
 class UzsakymoEilutes(models.Model):
     kiekis = models.IntegerField('Kiekis')
-    kaina = models.FloatField('Kaina')
+    # kaina = models.FloatField('Kaina')
     uzsakymas = models.ForeignKey(Uzsakymas, on_delete=models.CASCADE)
     paslauga = models.ForeignKey('Paslauga', on_delete=models.CASCADE)
 
@@ -98,8 +112,12 @@ class UzsakymoEilutes(models.Model):
         return f'{self.kiekis} {self.kaina}€'
 
     class Meta:
-        verbose_name = 'Uzsakymo Eilute'
-        verbose_name_plural = 'Uzsakymo Eilutes'
+        verbose_name = 'Užsakymo Eilutė'
+        verbose_name_plural = 'Užsakymo Eilutes'
+
+    @property
+    def kaina(self):
+        return self.paslauga.kaina * self.kiekis
 
 
 class Paslauga(models.Model):
@@ -111,4 +129,4 @@ class Paslauga(models.Model):
 
     class Meta:
         verbose_name = 'Paslauga'
-        verbose_name_plural = 'Paslaugos'
+        verbose_name_plural = ' Paslaugos'

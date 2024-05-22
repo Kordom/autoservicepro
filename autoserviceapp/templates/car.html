@@ -8,6 +8,9 @@
 {% else %}
     <img src="{% static 'img/no-image.png' %}"/>
 {% endif %}
+<hr/>
+Aprasymas:
+{{ car_obj.aprasymas | safe}}
 <ul>
     <li><strong>Savininkas:</strong> {{ car_obj.klientas }}</li>
     <li><strong>Automobilio modelis:</strong> {{ car_obj.modelis }}</li>

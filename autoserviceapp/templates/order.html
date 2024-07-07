@@ -6,6 +6,30 @@
                             {{ uzsakymas.automobilis.modelis }}</h1>
 <hr/>
 <p>Detalesne informacija apie užsakymą:</p>
+{% if user.is_authenticated %}
+<div>
+    <h5>Palikite atsiliepima apie uzsakyma</h5>
+    <form method="post">
+        {%csrf_token%}
+        {{ form.content }}
+        <div>
+            <input type="submit" class="btn btn-outline-success btn-sm" value="Issaugoti komentara"/>
+        </div>
+    </form>
+</div>
+{% endif %}
+
+<h5>Komentarai:</h5>
+{% if uzsakymas.uzsakymasreview_set.all %}
+<hr/>
+{% for review in uzsakymas.uzsakymasreview_set.all %}
+<small><b>{{review.reviewer}}</b> <em>{{review.date_created}}:</em></small>
+<p class="bg-light">{{review.content}}</p>
+{% endfor %}
+{% else %}
+    <p>Uzsakymas komentaru neturi...</p>
+{% endif %}
+
 <ul>
     <li><strong>Kliento Vardas Pavardė:</strong> {{ uzsakymas.automobilis.klientas}}</li>
     {% for uzsakymas_obj in uzsakymas.uzsakymoeilutes_set.all %}

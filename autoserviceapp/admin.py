@@ -60,3 +60,5 @@ class PaslaugosAdmin(admin.ModelAdmin):
 # admin.site.register(Uzsakymas, UzsakymasAdmin)
 # admin.site.register(UzsakymoEilutes, UzsakymoEilutesAdmin)
 # admin.site.register(Paslauga, PaslaugosAdmin)
+admin.site.register(UzsakymasReview)
+admin.site.register(Profile)

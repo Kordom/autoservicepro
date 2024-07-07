@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.views import generic
 from django.db.models import Q
 from django.http import HttpResponse
@@ -7,6 +7,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_protect
+from django.contrib.auth.decorators import login_required
+from .forms import UzsakymasReviewForm, ProfileUpdateForm, UserUpdateForm
 from .models import *
 
 
@@ -57,10 +59,31 @@ class UzsakymasListView(generic.ListView):
     paginate_by = 5
 
 
-class UzsakymasDetailedView(generic.DetailView):
+class UzsakymasDetailedView(generic.edit.FormMixin, generic.DetailView):
     model = Uzsakymas
     context_object_name = 'uzsakymas'
     template_name = 'order.html'
+    form_class = UzsakymasReviewForm
+
+    # post is formos
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    # formos custom validacija(jos metu irasome komnetarui knyga ir useri)
+    def form_valid(self, form):
+        form.instance.uzsakymas = self.object
+        form.instance.reviewer = self.request.user
+        form.save()
+        return super().form_valid(form)
+
+    # nurodome kur patenkame PO posto
+    def get_success_url(self):
+        return reverse('order', kwargs={'pk': self.object.id})
 
 
 def get_all_current_orders_count(request):
@@ -136,3 +159,27 @@ def register_user(request):
         User.objects.create_user(username=username, email=email, password=password)
         messages.info(request, f'Jusu profilis: {username}, {email}, sekmingai uregistruotas')
         return redirect('login')
+
+
+@login_required
+def profilis(request):
+    if request.method == 'POST':
+        p_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
+        u_form = UserUpdateForm(request.POST, instance=request.user)
+        if p_form.is_valid() and u_form.is_valid():
+            p_form.save()
+            u_form.save()
+            messages.info(request, 'Profilis atnaujintas')
+
+        else:
+            messages.warning(request, 'Dėl klaidos profilis nebuvo pakeistas')
+        return redirect('profile-url')
+
+    p_form = ProfileUpdateForm(instance=request.user.profile)
+    u_form = UserUpdateForm(instance=request.user)
+
+    context = {
+        'p_form': p_form,
+        'u_form': u_form,
+    }
+    return render(request, 'profilis.html', context=context)

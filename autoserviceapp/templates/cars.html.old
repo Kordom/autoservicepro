@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Autoservisas</h1>
+<hr/>
+<p>Siuo metu uregistruoti automobiliai</p>
+<ul>
+    {% for car_obj in cars_all%}
+    <li><a href="{% url 'car' car_obj.id %}" class="text-nowrap">
+        {{ car_obj.marke }} {{ car_obj.modelis }}</a></li>
+    {% endfor %}
+</ul>
+
+{% if cars_all.has_other_pages %}
+<ul class="pagination pagination-sm">
+{% for nr in cars_all.paginator.page_range %}
+    {% if cars_all.number == nr %}
+        <li class="page-item active">
+            <a class="page-link">{{ nr }}</a>
+        </li>
+    {% else %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ nr }}">{{ nr }}</a>
+        </li>
+    {% endif %}
+{% endfor %}
+</ul>
+{% endif %}
+
+
+{% endblock %}

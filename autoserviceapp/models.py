@@ -4,7 +4,7 @@ from django.db import models
 from random import randint
 from django.contrib.auth.models import User
 from datetime import date
-import PIL
+from PIL import Image
 
 
 def make_random_vin():
@@ -130,3 +130,28 @@ class Paslauga(models.Model):
     class Meta:
         verbose_name = 'Paslauga'
         verbose_name_plural = ' Paslaugos'
+
+
+class UzsakymasReview(models.Model):
+    date_created = models.DateTimeField(auto_now_add=True)
+    content = models.TextField('Atsiliepimas', max_length=2000)
+    uzsakymas = models.ForeignKey(Uzsakymas, on_delete=models.CASCADE, blank=True)
+    reviewer = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
+
+    def __str__(self):
+        return f'{self.date_created} {self.reviewer} {self.uzsakymas} {self.content[:50]}'
+
+
+class Profile(models.Model):
+    picture = models.ImageField(upload_to='profile_pics', blank=True, default='default-user.png')
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.user} profilis'
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        img = Image.open(self.picture.path)
+        thumb_size = (300, 300)
+        img.thumbnail(thumb_size)
+        img.save(self.picture.path)

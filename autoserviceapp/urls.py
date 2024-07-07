@@ -11,5 +11,6 @@ urlpatterns = [
     path('search/', views.search, name='search'),
     path('myorders/', views.OrdersByUserListView.as_view(), name='myorders'),
     path('register/', views.register_user, name='register-url'),
+    path('profilis/', views.profilis, name='profile-url'),
 
 ]
